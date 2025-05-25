@@ -1,39 +1,19 @@
-import { useState } from "react";
-import Input from "./components/input";
-import Buttons from "./components/buttons";
+import React from "react";
+import { Link } from "react-router-dom";
 
-import "./App.css";
-
-function App() {
-	const [activeComponent, setActiveComponent] = useState("generalInfo");
-	const [generalInfo, setGeneralInfo] = useState({
-		firstname: "",
-		lastname: "",
-		phone: "",
-		email: "",
-		location: "",
-		languages: "",
-		linkedin: "",
-		summary: "",
-	});
-	const HandleGeneralInfoChange = (field, value) => {
-		setGeneralInfo((previnfo) => ({ ...previnfo, [field]: value }));
-	};
-	const [education, setEducation] = useState([]);
-	const [workExperience, setWorkExperience] = useState([]);
-	const [skills, setSkills] = useState([]);
-
+export default function App() {
 	return (
-		<>
-			<Buttons setActiveComponent={setActiveComponent} />
-
-			<Input
-				activeComponent={activeComponent}
-				GeneralInfo={generalInfo}
-				OnGeneralInfoChange={HandleGeneralInfoChange}
-			/>
-		</>
+		<div className="p-4">
+			<h1 className="text-3xl font-bold">Welcome to CV Maker</h1>
+			<p className="mt-2">Create and download your professional CV</p>
+			<div className="mt-4 space-x-2">
+				<Link to="/register" className="bg-blue-500 text-white p-2">
+					Register
+				</Link>
+				<Link to="/login" className="bg-green-500 text-white p-2">
+					Login
+				</Link>
+			</div>
+		</div>
 	);
 }
-
-export default App;
