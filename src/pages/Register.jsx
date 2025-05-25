@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-export default function Register() {
+function Register() {
 	const [form, setForm] = useState({ username: "", password: "" });
 	const navigate = useNavigate();
 
@@ -13,37 +13,30 @@ export default function Register() {
 		e.preventDefault();
 		try {
 			await axios.post("http://localhost:3001/api/register", form);
-			alert("Registered successfully!");
 			navigate("/login");
 		} catch (err) {
-			alert("Registration failed: " + err.response?.data);
+			alert("Username already exists");
 		}
 	};
 
 	return (
-		<div className="p-4">
-			<h2 className="text-xl font-bold mb-2">Register</h2>
-			<form onSubmit={handleSubmit} className="space-y-2">
-				<input
-					type="text"
-					name="username"
-					placeholder="Username"
-					onChange={handleChange}
-					required
-					className="border p-2 w-full"
-				/>
+		<div>
+			<h2>Register</h2>
+			<form onSubmit={handleSubmit}>
+				<input name="username" onChange={handleChange} placeholder="Username" />
 				<input
 					type="password"
 					name="password"
-					placeholder="Password"
 					onChange={handleChange}
-					required
-					className="border p-2 w-full"
+					placeholder="Password"
 				/>
-				<button type="submit" className="bg-blue-500 text-white p-2">
-					Register
-				</button>
+				<button type="submit">Register</button>
 			</form>
+			<p>
+				Already have an account? <Link to="/login">Login</Link>
+			</p>
 		</div>
 	);
 }
+
+export default Register;

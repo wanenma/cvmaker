@@ -1,19 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import CVBuilder from "./pages/CVBuilder";
 
-export default function App() {
+function App() {
 	return (
-		<div className="p-4">
-			<h1 className="text-3xl font-bold">Welcome to CV Maker</h1>
-			<p className="mt-2">Create and download your professional CV</p>
-			<div className="mt-4 space-x-2">
-				<Link to="/register" className="bg-blue-500 text-white p-2">
-					Register
-				</Link>
-				<Link to="/login" className="bg-green-500 text-white p-2">
-					Login
-				</Link>
-			</div>
-		</div>
+		<Routes>
+			<Route path="/" element={<Login />} />
+			<Route path="/register" element={<Register />} />
+			<Route path="/dashboard" element={<Dashboard />} />
+			<Route path="/builder" element={<CVBuilder />} />
+		</Routes>
 	);
 }
+
+export default App;
