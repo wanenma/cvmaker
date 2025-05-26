@@ -40,3 +40,129 @@
 .read-the-docs {
   color: #888;
 }
+
+.cv-preview {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 8.5in;
+  margin: 0;
+  padding: 1in;
+  background: white;
+  font-family: 'Arial', sans-serif;
+  z-index: -1;
+}
+
+.cv-preview-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cv-preview-header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2.5rem;
+}
+
+.cv-preview-contact {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #34495e;
+}
+
+.cv-preview-contact p {
+  margin: 0.25rem 0;
+}
+
+.cv-preview-section {
+  margin: 1.5rem 0;
+}
+
+.cv-preview-section h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cv-preview-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2c3e50;
+  white-space: pre-line;
+}
+
+/* Styles for the CV cards */
+.cv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.cv-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.cv-card:hover {
+  transform: translateY(-5px);
+}
+
+.cv-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cv-card h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.download-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #2980b9;
+}
+
+.cv-section {
+  margin: 1rem 0;
+}
+
+.cv-section h4 {
+  color: #34495e;
+  margin: 0.5rem 0;
+}
+
+.cv-date {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Print styles for PDF generation */
+@media print {
+  .cv-preview {
+    position: static !important;
+    left: 0 !important;
+    z-index: 1 !important;
+    display: block !important;
+  }
+  
+  body > *:not(.cv-preview) {
+    display: none !important;
+  }
+}

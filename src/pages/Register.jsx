@@ -2,34 +2,48 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-function Register() {
-	const [form, setForm] = useState({ username: "", password: "" });
+export default function Register() {
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
 	const navigate = useNavigate();
-
-	const handleChange = (e) =>
-		setForm({ ...form, [e.target.name]: e.target.value });
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post("http://localhost:3001/api/register", form);
+			await axios.post("http://localhost:3001/api/register", {
+				username,
+				password
+			});
 			navigate("/login");
 		} catch (err) {
-			alert("Username already exists");
+			setError(err.response?.data || "Registration failed");
 		}
 	};
 
 	return (
-		<div>
+		<div className="auth-container">
 			<h2>Register</h2>
+			{error && <div className="error">{error}</div>}
 			<form onSubmit={handleSubmit}>
-				<input name="username" onChange={handleChange} placeholder="Username" />
-				<input
-					type="password"
-					name="password"
-					onChange={handleChange}
-					placeholder="Password"
-				/>
+				<div className="form-group">
+					<label>Username:</label>
+					<input
+						type="text"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						required
+					/>
+				</div>
+				<div className="form-group">
+					<label>Password:</label>
+					<input
+						type="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+					/>
+				</div>
 				<button type="submit">Register</button>
 			</form>
 			<p>
@@ -38,5 +52,3 @@ function Register() {
 		</div>
 	);
 }
-
-export default Register;

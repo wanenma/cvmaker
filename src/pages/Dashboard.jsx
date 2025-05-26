@@ -1,38 +1,42 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CVForm from '../components/CVForm';
+import CVList from '../components/CVList';
 
-function Dashboard() {
-	const [cvs, setCvs] = useState([]);
+export default function Dashboard() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		if (!token) return navigate("/login");
+		const token = localStorage.getItem('token');
+		if (!token) {
+			navigate('/login');
+		}
+	}, [navigate]);
 
-		axios
-			.get("http://localhost:3001/api/cvs", {
-				headers: { Authorization: `Bearer ${token}` },
-			})
-			.then((res) => setCvs(res.data))
-			.catch(() => navigate("/login"));
-	}, []);
+	const handleLogout = () => {
+		localStorage.removeItem('token');
+		navigate('/login');
+	};
 
 	return (
-		<div>
-			<h2>Your Saved CVs</h2>
-			<Link to="/builder">
-				<button>Create New CV</button>
-			</Link>
-			<ul>
-				{cvs.map((cv) => (
-					<li key={cv.id}>
-						{cv.name} - {cv.email}
-					</li>
-				))}
-			</ul>
+		<div className="dashboard">
+			<header className="dashboard-header">
+				<h1>CV Maker Dashboard</h1>
+				<button onClick={handleLogout} className="logout-btn">
+					Logout
+				</button>
+			</header>
+
+			<div className="dashboard-content">
+				<section className="create-cv-section">
+					<h2>Create New CV</h2>
+					<CVForm onSave={() => window.location.reload()} />
+				</section>
+
+				<section className="cv-list-section">
+					<CVList />
+				</section>
+			</div>
 		</div>
 	);
 }
-
-export default Dashboard;

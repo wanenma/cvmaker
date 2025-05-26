@@ -17,9 +17,24 @@ const db = mysql.createConnection({
 	database: "cvmaker",
 });
 
+// Improved database connection handling
 db.connect((err) => {
-	if (err) throw err;
+	if (err) {
+		console.error("❌ Error connecting to MySQL:", err);
+		console.error("Error code:", err.code);
+		console.error("Error message:", err.message);
+		process.exit(1);
+	}
 	console.log("✅ Connected to MySQL");
+});
+
+// Test database connection
+db.query('SELECT 1', (err, results) => {
+    if (err) {
+        console.error("❌ Database test query failed:", err);
+        process.exit(1);
+    }
+    console.log("✅ Database test query successful");
 });
 
 // === Register ===
@@ -85,19 +100,24 @@ function auth(req, res, next) {
 	});
 }
 
-// === Save CV ===
+// === Save CV with improved error handling ===
 app.post("/api/cv", auth, (req, res) => {
 	const { name, email, phone, education, experience, skills } = req.body;
+	console.log("📝 Attempting to save CV for user:", req.user.id);
+	console.log("CV Data:", { name, email, phone, education, experience, skills });
 
 	db.query(
 		"INSERT INTO cvs (user_id, name, email, phone, education, experience, skills) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		[req.user.id, name, email, phone, education, experience, skills],
-		(err) => {
+		(err, result) => {
 			if (err) {
 				console.error("❌ Error saving CV:", err);
-				return res.status(500).send("Error saving CV");
+				console.error("Error code:", err.code);
+				console.error("Error message:", err.message);
+				return res.status(500).send("Error saving CV: " + err.message);
 			}
-			res.sendStatus(200);
+			console.log("✅ CV saved successfully. Insert ID:", result.insertId);
+			res.status(200).json({ message: "CV saved successfully", id: result.insertId });
 		},
 	);
 });

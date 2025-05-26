@@ -11,15 +11,40 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --background-color: #f3f4f6;
+  --card-background: #ffffff;
+  --text-color: #1f2937;
+  --border-color: #e5e7eb;
+  --success-color: #10b981;
+  --success-hover: #059669;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --spacing-base: 1rem;
+  --border-radius: 8px;
+  --container-width: 95%;
+  --max-container-width: 1440px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+    --font-size-lg: 16px;
+    --spacing-base: 0.75rem;
+    --container-width: 98%;
+  }
 }
-a:hover {
-  color: #535bf2;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -28,6 +53,12 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  width: 100%;
 }
 
 h1 {
@@ -64,5 +95,407 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+.app {
+  min-height: 100vh;
+  width: var(--container-width);
+  max-width: var(--max-container-width);
+  margin: 0 auto;
+  padding: var(--spacing-base);
+}
+
+/* Auth Pages */
+.auth-container {
+  max-width: 500px;
+  width: 90%;
+  margin: 2rem auto;
+  padding: calc(var(--spacing-base) * 2);
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: var(--font-size-lg);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-base);
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: calc(var(--spacing-base) * 0.5);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: calc(var(--spacing-base) * 0.75);
+  border: 1px solid var(--border-color);
+  border-radius: calc(var(--border-radius) * 0.5);
+  font-size: var(--font-size-base);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  padding: calc(var(--spacing-base) * 0.75);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: calc(var(--border-radius) * 0.5);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.error {
+  color: var(--danger-color);
+  margin-bottom: var(--spacing-base);
+  padding: calc(var(--spacing-base) * 0.5);
+  background-color: #fee2e2;
+  border-radius: calc(var(--border-radius) * 0.5);
+  font-size: var(--font-size-sm);
+}
+
+/* Dashboard */
+.dashboard {
+  width: 100%;
+  padding: var(--spacing-base);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--spacing-base) * 2);
+  flex-wrap: wrap;
+  gap: var(--spacing-base);
+}
+
+.dashboard-header h1 {
+  font-size: calc(var(--font-size-lg) * 1.5);
+  margin: 0;
+}
+
+.logout-btn {
+  width: auto;
+  min-width: 100px;
+  padding: calc(var(--spacing-base) * 0.5) var(--spacing-base);
+  background-color: var(--danger-color);
+}
+
+.logout-btn:hover {
+  background-color: var(--danger-hover);
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--spacing-base) * 2);
+}
+
+@media (min-width: 1024px) {
+  .dashboard-content {
+    grid-template-columns: minmax(400px, 1fr) minmax(400px, 1.5fr);
+  }
+}
+
+.create-cv-section,
+.cv-list-section {
+  background-color: var(--card-background);
+  padding: calc(var(--spacing-base) * 1.5);
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* CV List */
+.cv-grid {
+  display: grid;
+  gap: var(--spacing-base);
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.cv-card {
+  background-color: var(--background-color);
+  padding: calc(var(--spacing-base) * 1.5);
+  border-radius: calc(var(--border-radius) * 0.5);
+  border: 1px solid var(--border-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-base);
+  gap: var(--spacing-base);
+}
+
+.cv-section {
+  margin: var(--spacing-base) 0;
+}
+
+.cv-section h4 {
+  margin-bottom: calc(var(--spacing-base) * 0.5);
+  color: var(--primary-color);
+  font-size: var(--font-size-base);
+}
+
+.cv-date {
+  color: #6b7280;
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-base);
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.form-section h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.education-entry,
+.experience-entry {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.add-btn,
+.remove-btn {
+  margin-top: 1rem;
+  width: auto;
+  padding: 0.5rem 1rem;
+}
+
+.add-btn {
+  background-color: #10b981;
+}
+
+.add-btn:hover {
+  background-color: #059669;
+}
+
+.remove-btn {
+  background-color: #ef4444;
+  margin-right: 1rem;
+}
+
+.remove-btn:hover {
+  background-color: #dc2626;
+}
+
+/* CV Card */
+.cv-card {
+  padding: 1.5rem;
+}
+
+.cv-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.download-btn {
+  width: auto;
+  min-width: 120px;
+  background-color: var(--success-color);
+}
+
+.download-btn:hover {
+  background-color: var(--success-hover);
+}
+
+.cv-entry {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.cv-entry h5 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.cv-entry .position {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.cv-entry .date-range {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.cv-entry .description {
+  white-space: pre-line;
+  color: #4b5563;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-card-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+}
+
+/* A4 Preview Styles */
+.cv-preview {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+  margin: 20px auto;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+.cv-preview-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.cv-preview-header h1 {
+  font-size: 24px;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.cv-preview-contact {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.cv-preview-section {
+  margin: 1.5rem 0;
+}
+
+.cv-preview-section h2 {
+  font-size: 18px;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cv-preview-content {
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-line;
+  color: var(--text-color);
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .cv-preview,
+  .cv-preview * {
+    visibility: visible;
+    display: block;
+  }
+
+  .cv-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 20mm;
+    box-shadow: none;
+  }
+
+  .cv-preview-header {
+    margin-bottom: 15mm;
+  }
+
+  .cv-preview-section {
+    margin: 10mm 0;
+  }
+
+  .cv-preview-content {
+    page-break-inside: avoid;
+  }
+}
+
+/* Responsive adjustments for the download button */
+@media (max-width: 480px) {
+  .cv-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .download-btn {
+    margin-left: 0;
+    margin-top: var(--spacing-base);
+    width: 100%;
   }
 }
