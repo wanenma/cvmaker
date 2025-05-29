@@ -137,6 +137,46 @@ app.get("/api/cvs", auth, (req, res) => {
 	);
 });
 
+// === Delete CV ===
+app.delete("/api/cv/:id", auth, (req, res) => {
+    const cvId = req.params.id;
+    console.log("🗑️ Attempting to delete CV:", cvId, "for user:", req.user.id);
+
+    // First check if the CV belongs to the user
+    db.query(
+        "SELECT user_id FROM cvs WHERE id = ?",
+        [cvId],
+        (err, results) => {
+            if (err) {
+                console.error("❌ Error checking CV ownership:", err);
+                return res.status(500).send("Error checking CV ownership");
+            }
+
+            if (results.length === 0) {
+                return res.status(404).send("CV not found");
+            }
+
+            if (results[0].user_id !== req.user.id) {
+                return res.status(403).send("Unauthorized to delete this CV");
+            }
+
+            // If we get here, the user owns the CV, so we can delete it
+            db.query(
+                "DELETE FROM cvs WHERE id = ? AND user_id = ?",
+                [cvId, req.user.id],
+                (deleteErr, deleteResult) => {
+                    if (deleteErr) {
+                        console.error("❌ Error deleting CV:", deleteErr);
+                        return res.status(500).send("Error deleting CV");
+                    }
+                    console.log("✅ CV deleted successfully");
+                    res.status(200).json({ message: "CV deleted successfully" });
+                }
+            );
+        }
+    );
+});
+
 app.listen(3001, () =>
 	console.log("🚀 Server running on http://localhost:3001"),
 );

@@ -6,6 +6,7 @@ export default function CVList() {
   const [cvs, setCvs] = useState([]);
   const [selectedCV, setSelectedCV] = useState(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const previewRef = useRef();
 
   const fetchCVs = async () => {
@@ -24,6 +25,27 @@ export default function CVList() {
     fetchCVs();
   }, []);
 
+  const handleDelete = async (cvId) => {
+    if (!window.confirm('Are you sure you want to delete this CV?')) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:3001/api/cv/${cvId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Refresh the CV list after successful deletion
+      fetchCVs();
+    } catch (err) {
+      console.error('Error deleting CV:', err);
+      alert('Failed to delete CV');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const downloadCV = async (cv) => {
     try {
       setIsGeneratingPDF(true);
@@ -33,31 +55,31 @@ export default function CVList() {
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = `
         <div style="padding: 40px; font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: white;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="margin: 0; color: #2c3e50; font-size: 32px;">${cv.name}</h1>
-            <div style="margin-top: 10px; font-size: 16px; color: #34495e;">
+          <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="margin: 0; color: #1e293b; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; display: inline-block;">${cv.name}</h1>
+            <div style="margin-top: 15px; font-size: 16px; color: #64748b;">
               <p style="margin: 5px 0;">${cv.email}</p>
               <p style="margin: 5px 0;">${cv.phone}</p>
             </div>
           </div>
 
           <div style="margin: 25px 0;">
-            <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px;">Education</h2>
-            <div style="font-size: 16px; line-height: 1.6; color: #2c3e50; white-space: pre-line;">
+            <h2 style="color: #1e293b; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; font-size: 24px;">Education</h2>
+            <div style="font-size: 16px; line-height: 1.6; color: #334155; white-space: pre-line; margin-top: 15px;">
               ${cv.education}
             </div>
           </div>
 
           <div style="margin: 25px 0;">
-            <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px;">Professional Experience</h2>
-            <div style="font-size: 16px; line-height: 1.6; color: #2c3e50; white-space: pre-line;">
+            <h2 style="color: #1e293b; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; font-size: 24px;">Professional Experience</h2>
+            <div style="font-size: 16px; line-height: 1.6; color: #334155; white-space: pre-line; margin-top: 15px;">
               ${cv.experience}
             </div>
           </div>
 
           <div style="margin: 25px 0;">
-            <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px;">Skills</h2>
-            <div style="font-size: 16px; line-height: 1.6; color: #2c3e50; white-space: pre-line;">
+            <h2 style="color: #1e293b; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; font-size: 24px;">Skills</h2>
+            <div style="font-size: 16px; line-height: 1.6; color: #334155; white-space: pre-line; margin-top: 15px;">
               ${cv.skills}
             </div>
           </div>
@@ -104,13 +126,22 @@ export default function CVList() {
             <div key={cv.id} className="cv-card">
               <div className="cv-card-header">
                 <h3>{cv.name}</h3>
-                <button
-                  onClick={() => downloadCV(cv)}
-                  className="download-btn"
-                  disabled={isGeneratingPDF}
-                >
-                  {isGeneratingPDF ? 'Generating...' : 'Download PDF'}
-                </button>
+                <div className="cv-card-actions">
+                  <button
+                    onClick={() => downloadCV(cv)}
+                    className="download-btn"
+                    disabled={isGeneratingPDF}
+                  >
+                    {isGeneratingPDF ? 'Generating...' : 'Download PDF'}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cv.id)}
+                    className="delete-btn"
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? 'Deleting...' : 'Delete'}
+                  </button>
+                </div>
               </div>
               <p><strong>Email:</strong> {cv.email}</p>
               <p><strong>Phone:</strong> {cv.phone}</p>

@@ -11,15 +11,68 @@ export default function CVForm({ onSave }) {
     skills: ''
   });
 
+  const [errors, setErrors] = useState({
+    email: '',
+    phone: ''
+  });
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^\d+$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    
+    if (name === 'phone') {
+      // Only allow numbers
+      if (value === '' || /^\d+$/.test(value)) {
+        setFormData({
+          ...formData,
+          [name]: value
+        });
+        setErrors({
+          ...errors,
+          phone: value === '' ? 'Phone number is required' : ''
+        });
+      }
+    } else if (name === 'email') {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+      setErrors({
+        ...errors,
+        email: !validateEmail(value) ? 'Please enter a valid email address' : ''
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate before submission
+    const emailError = !validateEmail(formData.email) ? 'Please enter a valid email address' : '';
+    const phoneError = !validatePhone(formData.phone) ? 'Please enter a valid phone number' : '';
+
+    if (emailError || phoneError) {
+      setErrors({
+        email: emailError,
+        phone: phoneError
+      });
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       await axios.post('http://localhost:3001/api/cv', formData, {
@@ -33,6 +86,10 @@ export default function CVForm({ onSave }) {
         education: '',
         experience: '',
         skills: ''
+      });
+      setErrors({
+        email: '',
+        phone: ''
       });
     } catch (err) {
       console.error('Error saving CV:', err);
@@ -61,7 +118,10 @@ export default function CVForm({ onSave }) {
           value={formData.email}
           onChange={handleChange}
           required
+          pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+          title="Please enter a valid email address"
         />
+        {errors.email && <div className="error-message">{errors.email}</div>}
       </div>
 
       <div className="form-group">
@@ -72,7 +132,10 @@ export default function CVForm({ onSave }) {
           value={formData.phone}
           onChange={handleChange}
           required
+          pattern="\d+"
+          title="Please enter numbers only"
         />
+        {errors.phone && <div className="error-message">{errors.phone}</div>}
       </div>
 
       <div className="form-group">
